@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package counter.v1;
+
+message IncrementRequest {}
+
+message IncrementResponse {
+  int64 value = 1;
+}
+
+service CounterService {
+  rpc Increment(IncrementRequest) returns (IncrementResponse) {}
+}
