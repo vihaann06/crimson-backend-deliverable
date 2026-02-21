@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file counter/v1/counter.proto.
  */
 export const file_counter_v1_counter: GenFile = /*@__PURE__*/
-  fileDesc("Chhjb3VudGVyL3YxL2NvdW50ZXIucHJvdG8SCmNvdW50ZXIudjEiEgoQSW5jcmVtZW50UmVxdWVzdCIiChFJbmNyZW1lbnRSZXNwb25zZRINCgV2YWx1ZRgBIAEoAzJcCg5Db3VudGVyU2VydmljZRJKCglJbmNyZW1lbnQSHC5jb3VudGVyLnYxLkluY3JlbWVudFJlcXVlc3QaHS5jb3VudGVyLnYxLkluY3JlbWVudFJlc3BvbnNlIgBCjQEKDmNvbS5jb3VudGVyLnYxQgxDb3VudGVyUHJvdG9QAVokY29tcC9zZXJ2ZXIvZ2VuL2NvdW50ZXIvdjE7Y291bnRlcnYxogIDQ1hYqgIKQ291bnRlci5WMcoCCkNvdW50ZXJcVjHiAhZDb3VudGVyXFYxXEdQQk1ldGFkYXRh6gILQ291bnRlcjo6VjFiBnByb3RvMw");
+  fileDesc("Chhjb3VudGVyL3YxL2NvdW50ZXIucHJvdG8SCmNvdW50ZXIudjEiEgoQSW5jcmVtZW50UmVxdWVzdCIiChFJbmNyZW1lbnRSZXNwb25zZRINCgV2YWx1ZRgBIAEoAyIRCg9HZXRWYWx1ZVJlcXVlc3QiIQoQR2V0VmFsdWVSZXNwb25zZRINCgV2YWx1ZRgBIAEoAzKlAQoOQ291bnRlclNlcnZpY2USSgoJSW5jcmVtZW50EhwuY291bnRlci52MS5JbmNyZW1lbnRSZXF1ZXN0Gh0uY291bnRlci52MS5JbmNyZW1lbnRSZXNwb25zZSIAEkcKCEdldFZhbHVlEhsuY291bnRlci52MS5HZXRWYWx1ZVJlcXVlc3QaHC5jb3VudGVyLnYxLkdldFZhbHVlUmVzcG9uc2UiAEKNAQoOY29tLmNvdW50ZXIudjFCDENvdW50ZXJQcm90b1ABWiRjb21wL3NlcnZlci9nZW4vY291bnRlci92MTtjb3VudGVydjGiAgNDWFiqAgpDb3VudGVyLlYxygIKQ291bnRlclxWMeICFkNvdW50ZXJcVjFcR1BCTWV0YWRhdGHqAgtDb3VudGVyOjpWMWIGcHJvdG8z");
 
 /**
  * @generated from message counter.v1.IncrementRequest
@@ -43,6 +43,36 @@ export const IncrementResponseSchema: GenMessage<IncrementResponse> = /*@__PURE_
   messageDesc(file_counter_v1_counter, 1);
 
 /**
+ * @generated from message counter.v1.GetValueRequest
+ */
+export type GetValueRequest = Message<"counter.v1.GetValueRequest"> & {
+};
+
+/**
+ * Describes the message counter.v1.GetValueRequest.
+ * Use `create(GetValueRequestSchema)` to create a new message.
+ */
+export const GetValueRequestSchema: GenMessage<GetValueRequest> = /*@__PURE__*/
+  messageDesc(file_counter_v1_counter, 2);
+
+/**
+ * @generated from message counter.v1.GetValueResponse
+ */
+export type GetValueResponse = Message<"counter.v1.GetValueResponse"> & {
+  /**
+   * @generated from field: int64 value = 1;
+   */
+  value: bigint;
+};
+
+/**
+ * Describes the message counter.v1.GetValueResponse.
+ * Use `create(GetValueResponseSchema)` to create a new message.
+ */
+export const GetValueResponseSchema: GenMessage<GetValueResponse> = /*@__PURE__*/
+  messageDesc(file_counter_v1_counter, 3);
+
+/**
  * @generated from service counter.v1.CounterService
  */
 export const CounterService: GenService<{
@@ -53,6 +83,14 @@ export const CounterService: GenService<{
     methodKind: "unary";
     input: typeof IncrementRequestSchema;
     output: typeof IncrementResponseSchema;
+  },
+  /**
+   * @generated from rpc counter.v1.CounterService.GetValue
+   */
+  getValue: {
+    methodKind: "unary";
+    input: typeof GetValueRequestSchema;
+    output: typeof GetValueResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_counter_v1_counter, 0);

@@ -36,11 +36,14 @@ const (
 	// CounterServiceIncrementProcedure is the fully-qualified name of the CounterService's Increment
 	// RPC.
 	CounterServiceIncrementProcedure = "/counter.v1.CounterService/Increment"
+	// CounterServiceGetValueProcedure is the fully-qualified name of the CounterService's GetValue RPC.
+	CounterServiceGetValueProcedure = "/counter.v1.CounterService/GetValue"
 )
 
 // CounterServiceClient is a client for the counter.v1.CounterService service.
 type CounterServiceClient interface {
 	Increment(context.Context, *connect.Request[v1.IncrementRequest]) (*connect.Response[v1.IncrementResponse], error)
+	GetValue(context.Context, *connect.Request[v1.GetValueRequest]) (*connect.Response[v1.GetValueResponse], error)
 }
 
 // NewCounterServiceClient constructs a client for the counter.v1.CounterService service. By
@@ -60,12 +63,19 @@ func NewCounterServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 			connect.WithSchema(counterServiceMethods.ByName("Increment")),
 			connect.WithClientOptions(opts...),
 		),
+		getValue: connect.NewClient[v1.GetValueRequest, v1.GetValueResponse](
+			httpClient,
+			baseURL+CounterServiceGetValueProcedure,
+			connect.WithSchema(counterServiceMethods.ByName("GetValue")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // counterServiceClient implements CounterServiceClient.
 type counterServiceClient struct {
 	increment *connect.Client[v1.IncrementRequest, v1.IncrementResponse]
+	getValue  *connect.Client[v1.GetValueRequest, v1.GetValueResponse]
 }
 
 // Increment calls counter.v1.CounterService.Increment.
@@ -73,9 +83,15 @@ func (c *counterServiceClient) Increment(ctx context.Context, req *connect.Reque
 	return c.increment.CallUnary(ctx, req)
 }
 
+// GetValue calls counter.v1.CounterService.GetValue.
+func (c *counterServiceClient) GetValue(ctx context.Context, req *connect.Request[v1.GetValueRequest]) (*connect.Response[v1.GetValueResponse], error) {
+	return c.getValue.CallUnary(ctx, req)
+}
+
 // CounterServiceHandler is an implementation of the counter.v1.CounterService service.
 type CounterServiceHandler interface {
 	Increment(context.Context, *connect.Request[v1.IncrementRequest]) (*connect.Response[v1.IncrementResponse], error)
+	GetValue(context.Context, *connect.Request[v1.GetValueRequest]) (*connect.Response[v1.GetValueResponse], error)
 }
 
 // NewCounterServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -91,10 +107,18 @@ func NewCounterServiceHandler(svc CounterServiceHandler, opts ...connect.Handler
 		connect.WithSchema(counterServiceMethods.ByName("Increment")),
 		connect.WithHandlerOptions(opts...),
 	)
+	counterServiceGetValueHandler := connect.NewUnaryHandler(
+		CounterServiceGetValueProcedure,
+		svc.GetValue,
+		connect.WithSchema(counterServiceMethods.ByName("GetValue")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/counter.v1.CounterService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case CounterServiceIncrementProcedure:
 			counterServiceIncrementHandler.ServeHTTP(w, r)
+		case CounterServiceGetValueProcedure:
+			counterServiceGetValueHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -106,4 +130,8 @@ type UnimplementedCounterServiceHandler struct{}
 
 func (UnimplementedCounterServiceHandler) Increment(context.Context, *connect.Request[v1.IncrementRequest]) (*connect.Response[v1.IncrementResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("counter.v1.CounterService.Increment is not implemented"))
+}
+
+func (UnimplementedCounterServiceHandler) GetValue(context.Context, *connect.Request[v1.GetValueRequest]) (*connect.Response[v1.GetValueResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("counter.v1.CounterService.GetValue is not implemented"))
 }

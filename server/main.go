@@ -29,6 +29,15 @@ func (s *CounterServer) Increment(
 	}), nil
 }
 
+func (s *CounterServer) GetValue(
+	_ context.Context,
+	_ *connect.Request[counterv1.GetValueRequest],
+) (*connect.Response[counterv1.GetValueResponse], error) {
+	return connect.NewResponse(&counterv1.GetValueResponse{
+		Value: counter.Load(),
+	}), nil
+}
+
 func main() {
 	mux := http.NewServeMux()
 	path, handler := counterv1connect.NewCounterServiceHandler(&CounterServer{})

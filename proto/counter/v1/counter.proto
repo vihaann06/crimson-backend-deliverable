@@ -8,6 +8,13 @@ message IncrementResponse {
   int64 value = 1;
 }
 
+message GetValueRequest {}
+
+message GetValueResponse {
+  int64 value = 1;
+}
+
 service CounterService {
   rpc Increment(IncrementRequest) returns (IncrementResponse) {}
+  rpc GetValue(GetValueRequest) returns (GetValueResponse) {}
 }

@@ -1,4 +1,4 @@
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import { createClient } from '@connectrpc/connect';
 import { createConnectTransport } from '@connectrpc/connect-node';
 import { CounterService } from '$lib/gen/counter/v1/counter_pb';
@@ -9,6 +9,11 @@ const transport = createConnectTransport({
 });
 
 const client = createClient(CounterService, transport);
+
+export const load: PageServerLoad = async () => {
+	const res = await client.getValue({});
+	return { value: Number(res.value) };
+};
 
 export const actions: Actions = {
 	default: async () => {
